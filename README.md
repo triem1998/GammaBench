@@ -1,4 +1,4 @@
-# BenchmarkGamma
+# Benchmark for gamma-ray spectrometry
 A benchmark comparing machine learning and statistical spectral unmixing for gamma-ray spectrometry.
 
 The codes are organized as follows:
