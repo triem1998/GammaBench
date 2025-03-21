@@ -22,7 +22,7 @@ The codes are organized as follows:
       - [CNN for quantification and comparaison](notebooks/Gamma_quantification.ipynb)
 
 ## Package requirements
-The codes are implemented using Pytorch and Pyro. To do it, you will need the packages listed in environment.yml. To create and activate a conda environment with all the imports needed, do:
+The codes are implemented using Pytorch. To do it, you will need the packages listed in environment.yml. To create and activate a conda environment with all the imports needed, do:
 -  conda env create -f environment.yml
 -  conda activate pytorch
   
