@@ -1,5 +1,5 @@
 # GammaBench
-<img src="illustrations/logo_gamma.png" width=120%>
+<img src="illustrations/logo_gamma.png" width=100%>
 
 A benchmark comparing machine learning and statistical spectral unmixing for automatic identification and quantification in gamma-ray spectrometry.
 
