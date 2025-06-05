@@ -25,6 +25,8 @@ def func(x,alpha):
     return x*(1-alpha[0])+alpha[1]
 
 
+    
+
 def find_drift_spectrum(spec_drift,spec_no_drift,func=func,bounds=None,loss_type=1,niter=100,step_size=1e-3,tole=1e-4,alpha0=None,optim=0,nbr_particles=1e6):
     """
     Transform  the spectrum with no drift into the drift spectrum
@@ -92,9 +94,9 @@ def find_drift_spectrum(spec_drift,spec_no_drift,func=func,bounds=None,loss_type
     return get_drift_spectrum_v2(spectre_drift_ener, param), param
 
 
-def NNPU_drift(y,X,a0=None,alpha0=None,func=func,estimed_aMVP=1,niter_max_in=1000,niter_max_out=10,tol=10**-4,optim=0):
+def NNPU_drift(y,X,a0=None,alpha0=None,func=func,estimed_aMVP=1,niter_max_in=1000,niter_max_out=10,tol=10**-4,optim=0,search_alpha0=False):
     """
-    Estimate a from the drift measured spectrum (mixing) y and the initial spectral singatures (without drift) X
+    Estimate a from the drift measured spectrum (mixing) y and the initial spectral signatures (without drift) X
     ----------
     y: measured spectrum (with drift)
     X : spectral signatures (without drift)
@@ -105,15 +107,37 @@ def NNPU_drift(y,X,a0=None,alpha0=None,func=func,estimed_aMVP=1,niter_max_in=100
     niter_max_out: maximum iteration of outer loop
     tol: stopping criterion
     optim: 'Nelder-Mead','Powell','L-BFGS-B','TNC'
+    search_alpha0: First guess  for alpha, can be useful when a library has many radionuclides
 
     """
     M,N=np.shape(X)
-    if a0 is None:
-        a0=np.ones(N)/N*np.sum(y)
-    ak=a0.copy()
+    if search_alpha0 is True:
+        ### can be modified
+        x0_list=np.array([[-0.14,0],[-0.07,0],[0,0],[0.07,0],[0.14,0]])
+        ########
+        list_a_est=[]
+        list_L0=[]
+        list_X_est=[]
+        for i in range(len(x0_list)):
+            alpha0=x0_list[i]
+            X_est=get_X_drift_est(X,alpha0,func)
+            a_est=NNPU(y,X_est)
+            list_a_est+=[a_est]
+            list_L0+=[divergence(X_est,y,a_est)]
+            list_X_est+=[X_est]
+        j=np.argmin(list_L0)
+        ak=list_a_est[j]
+        alpha0=x0_list[j]
+        Xk=list_X_est[j]  
+        
+    else:
+        if a0 is None: 
+            a0=np.ones(N)/N*np.sum(y)
+        ak=a0.copy()
+        Xk=X.copy()
     niter_out=0
     err=1 # initial error, > tol
-    Xk=X.copy()
+    #Xk=X.copy()
     while (niter_out<niter_max_out) & (err>tol) :
         niter_in=0
         err_in=1
@@ -160,7 +184,8 @@ def POMP_drift(y,X_init,fpr=1/100,niter_max_in=500,niter_max_out=10,tol=10**-3,t
     M,N=np.shape(X_init)
     # Init
     if option==0: # estimate alpha at the begining and then apply POMP for it
-        _,alpha_est,_=NNPU_drift(y,X_init,func=func,niter_max_in=niter_max_in,niter_max_out=niter_max_out,tol=tol,optim=optim,alpha0=alpha0)
+        _,alpha_est,_=NNPU_drift(y,X_init,func=func,niter_max_in=niter_max_in,niter_max_out=niter_max_out,
+                                 tol=tol,optim=optim,alpha0=alpha0,search_alpha0=True)
         X=get_X_drift_est(X_init,alpha_est,func=func)
         dic=POMP(y,X,fpr,niter_max_in,tol=tol,turn=turn,I0=I0)
         dic['Alpha']=np.array([alpha_est])
@@ -230,14 +255,10 @@ def forward_POMP_drift(y,X,I0,I,L0,fpr,list_loss,weight_esti,alpha_est,list_alph
         L_test=np.zeros(len(I))
         alpha_test=np.zeros((len(I),len(alpha_est)))
         DT=chi2.ppf(1-2*fpr/(len(I)), df=1) # chisquare 1 
-        if len(I0)>=2:
-            alpha0=alpha_est
-        else:
-            alpha0=None
         for i in range(len(I)):
             I_test=I0+[I[i]]  #add radio i in a tested dictionary
             X_test=X[:,I_test].copy()
-            weight_esti_test,alpha_test[i],L_test[i]= NNPU_drift(y,X_test,func=func, niter_max_in=niter_max_in, niter_max_out=niter_max_out, tol=tol,optim=optim,alpha0=alpha0) # estimated weight
+            weight_esti_test,alpha_test[i],L_test[i]= NNPU_drift(y,X_test,func=func, niter_max_in=niter_max_in, niter_max_out=niter_max_out, tol=tol,optim=optim) # estimated weight
             weight_esti_list+=[weight_esti_test]
 
         j=np.argmin(L_test) # min of loss
