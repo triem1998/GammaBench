@@ -32,4 +32,4 @@ If there is a problem with the installation of Pytorch , please follow this link
 
 ##  Test the code
 -  Run [POMP_MoseVa_identification_quantification.ipynb](notebooks/POMP_MoseVa_identification_quantification.ipynb) if you want to see how to use the spectral unmixing code.
--  Run [Gamma_identification.ipynb](notebooks/Gamma_identification.ipynb), [Gamma_quantification.ipynb](notebooks/Gamma_quantification.ipynb) if you want to see how to use CNN codes for identification and quantification.
+-  Run [Gamma_identification.ipynb](notebooks/Gamma_identification.ipynb), [Gamma_quantification.ipynb](notebooks/Gamma_quantification.ipynb) if you want to see how to use CNN codes for identification, quantification and compare the results between different methods.
