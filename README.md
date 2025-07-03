@@ -2,9 +2,9 @@
 <img src="illustrations/logo2.PNG"> 
 
 This repo provides a benchmark comparing machine learning and statistical spectral unmixing for automatic identification and quantification in gamma-ray spectrometry.
-End-to-end Machine learning:
+## End-to-end Machine learning:
 <img src="illustrations/Animation.gif" width=100%>
-Spectral unmixing:
+## Spectral unmixing:
 <img src="illustrations/Animation2.gif" width=100%>
 
 The codes are organized as follows:
