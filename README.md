@@ -1,10 +1,10 @@
 # GammaBench
 <img src="illustrations/logo2.PNG"> 
 
-A benchmark comparing machine learning and statistical spectral unmixing for automatic identification and quantification in gamma-ray spectrometry.
+This repo provides a benchmark comparing machine learning and statistical spectral unmixing for automatic identification and quantification in gamma-ray spectrometry.
 
 <img src="illustrations/Animation.gif" width=50%>
-<img src="illustrations/Animation2.gif" width=50%>
+<img src="illustrations/Animation2.gif" width=100%>
 
 The codes are organized as follows:
 -  The codes folder contains the source code for spectral unmixing and ML:
